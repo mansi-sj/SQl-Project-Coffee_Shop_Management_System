@@ -123,16 +123,16 @@ create table Menu_Items (
     menu_id int Primary Key auto_increment,
     category_id int not null,
     item_name varchar(100) not null,
-    description TEXT NULL,
-    price DECIMAL(10,2) NOT NULL CHECK (price > 0),
-    availability_status ENUM('Available', 'Out of Stock') DEFAULT 'Available',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    seasonal_id INT,
-    recipe_id INT,
-    calories INT NULL CHECK (calories >= 0),
-    foreign key (category_id) REFERENCES Categories(category_id) ON DELETE CASCADE,
-    foreign key (seasonal_id) REFERENCES Seasonal_Menu(seasonal_id) ON DELETE SET NULL,
-    foreign key (recipe_id) REFERENCES Recipe(recipe_id) ON DELETE SET NULL
+    description text null,
+    price decimal(10,2) not null check (price > 0),
+    availability_status ENUM('Available', 'Out of Stock') default 'Available',
+    created_at timestamp default current_timestamp,
+    seasonal_id int,
+    recipe_id int,
+    calories int null check(calories >= 0),
+    foreign key (category_id) references Categories(category_id) on delete cascade,
+    foreign key (seasonal_id) REFERENCES Seasonal_Menu(seasonal_id) on delete set null,
+    foreign key (recipe_id) REFERENCES Recipe(recipe_id) on delete set null
 );
 
 CREATE TABLE Categories (
@@ -201,7 +201,7 @@ CREATE TABLE Seasonal_Menu (
     foreign key (menu_id) REFERENCES Menu_Items(menu_id) ON DELETE CASCADE
 );
 
-CREATE TABLE Reservation (
+create table Reservation (
     reservation_id int Primary Key auto_increment,
     customer_id INT NOT NULL,
     table_number INT NOT NULL CHECK (table_number > 0),
@@ -236,7 +236,7 @@ CREATE TABLE Staff_Bonus (
 );
 
 CREATE TABLE Gift_Cards (
-    card_id INT PRIMARY KEY AUTO_INCREMENT,
+    card_id int Primary Key auto_increment,
     customer_id INT,
     card_code VARCHAR(20) UNIQUE NOT NULL,
     balance DECIMAL(10,2) CHECK (balance >= 0),
@@ -357,54 +357,54 @@ create table Franchises (
 );
 
 
-CREATE TABLE Feedback (
-    feedback_id INT PRIMARY KEY AUTO_INCREMENT,
-    customer_id INT NOT NULL,
-    order_id INT NOT NULL,
-    rating INT CHECK (rating BETWEEN 1 AND 5),
-    comments TEXT NULL,
-    feedback_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    response_status ENUM('Pending', 'Resolved') DEFAULT 'Pending',
-    responded_by INT NULL,
-    response_text TEXT NULL,
-    resolution_date TIMESTAMP NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (customer_id) REFERENCES customers(cust_id) ON DELETE CASCADE,
-    FOREIGN KEY (order_id) REFERENCES Orders(order_id) ON DELETE CASCADE,
-    FOREIGN KEY (responded_by) REFERENCES staff(staff_id) ON DELETE SET NULL
+create table Feedback (
+    feedback_id int Primary Key auto_increment,
+    customer_id int not null,
+    order_id int not null,
+    rating int check (rating between 1 and 5),
+    comments text null,
+    feedback_date timestamp default current_timestamp,
+    response_status enum('Pending', 'Resolved') default 'Pending',
+    responded_by int null,
+    response_text text null,
+    resolution_date timestamp null,
+    created_at timestamp default current_timestamp,
+    foreign key (customer_id) references customers(cust_id)on delete cascade,
+    foreign key (order_id) references Orders(order_id) on delete cascade,
+    foreign key (responded_by) references staff(staff_id) on delete set null
 );
 
 
-CREATE TABLE Reservation (
-    reservation_id INT PRIMARY KEY AUTO_INCREMENT,
-    customer_id INT NOT NULL,
-    table_number INT NOT NULL CHECK (table_number > 0),
-    reservation_date DATE NOT NULL,
-    reservation_time TIME NOT NULL,
-    number_of_guests INT NOT NULL CHECK (number_of_guests > 0),
-    status ENUM('Confirmed', 'Cancelled', 'Completed') DEFAULT 'Confirmed',
-    special_requests TEXT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    assigned_staff INT NULL,
-    FOREIGN KEY (customer_id) REFERENCES customers(cust_id) ON DELETE CASCADE,
-    FOREIGN KEY (assigned_staff) REFERENCES staff(staff_id) ON DELETE SET NULL
+create table Reservation (
+    reservation_id int Primary Key auto_increment,
+    customer_id int not null,
+    table_number int not null check (table_number > 0),
+    reservation_date date not null,
+    reservation_time time not null ,
+    number_of_guests int not null check (number_of_guests > 0),
+    status enum('Confirmed', 'Cancelled', 'Completed') default 'Confirmed',
+    special_requests text null,
+    created_at timestamp default current_timestamp,
+    assigned_staff int null,
+    foreign key (customer_id) references customers(cust_id) on delete cascade,
+    foreign key (assigned_staff) references staff(staff_id)on delete set null
 );
 
 
-CREATE TABLE Bill_Generation (
-    bill_id INT PRIMARY KEY AUTO_INCREMENT,
-    order_id INT NOT NULL,
-    customer_id INT NOT NULL,
-    total_amount DECIMAL(10,2) CHECK (total_amount > 0),
-    tax_amount DECIMAL(10,2) CHECK (tax_amount >= 0),
-    discount DECIMAL(10,2) DEFAULT 0 CHECK (discount >= 0),
-    final_amount DECIMAL(10,2) GENERATED ALWAYS AS (total_amount + tax_amount - discount) STORED,
-    payment_status ENUM('Paid', 'Unpaid') DEFAULT 'Unpaid',
-    generated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    processed_by INT NULL,
-    FOREIGN KEY (order_id) REFERENCES Orders(order_id) ON DELETE CASCADE,
-    FOREIGN KEY (customer_id) REFERENCES customers(cust_id) ON DELETE CASCADE,
-    FOREIGN KEY (processed_by) REFERENCES staff(staff_id) ON DELETE SET NULL
+create table Bill_Generation (
+    bill_id int Primary Key auto_increment,
+    order_id int not null,
+    customer_id int not null,
+    total_amount decimal(10,2) check (total_amount > 0),
+    tax_amount decimal(10,2) check (tax_amount >= 0),
+    discount decimal(10,2) default 0 check (discount >= 0),
+    final_amount decimal(10,2) generated always as (total_amount + tax_amount - discount) stored,
+    payment_status enum('Paid', 'Unpaid') default 'Unpaid',
+    generated_at timestamp default current_timestamp,
+    processed_by int null,
+    foreign key (order_id) references Orders(order_id) on delete cascade,
+   foreign key (customer_id) references customers(cust_id) on delete cascade,
+    foreign key (processed_by) references staff(staff_id) on delete set null
 );
 
 create table Recipe (
@@ -422,4 +422,3 @@ create table Recipe (
 	foreign key (menu_id) references Menu_Items(menu_id) on delete cascade,
     foreign key (chef_id) references staff(staff_id) on delete set null
 );
-
